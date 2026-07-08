@@ -1,0 +1,33 @@
+name: Build FongMi TV APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 拉取源码
+        uses: actions/checkout@v4
+
+      - name: 安装 JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: 安装 Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: 编译 APK
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: 保存 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: FongMi-TV-APK
+          path: |
+            **/build/outputs/apk/debug/*.apk
